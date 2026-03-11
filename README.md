@@ -97,7 +97,7 @@ Resume-Analyzer
    ⚙️ Installation
 Clone the repository:-
 
-git clone https://github.com/sub2004-nanda/Resume-Analyzing-System
+git clone https://github.com/008ankit/Resume_Analyzing_System.git
 
 Navigate to project folder:-
 
@@ -117,6 +117,7 @@ pip install -r requirements.txt
 
 Run the Streamlit app:
 streamlit run app.py
+
 
 
 
