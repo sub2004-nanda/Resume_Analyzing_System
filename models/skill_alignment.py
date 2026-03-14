@@ -47,3 +47,20 @@ def generate_skill_templates(df):
         templates[category] = list(skill_set)
 
     return templates
+
+def calculate_alignment(resume_skills, job_skills):
+    """
+    Calculates percentage match between resume skills and job skills
+    """
+
+    resume_set = set([s.lower() for s in resume_skills])
+    job_set = set([s.lower() for s in job_skills])
+
+    matched = resume_set.intersection(job_set)
+
+    if len(job_set) == 0:
+        return 0
+
+    score = (len(matched) / len(job_set)) * 100
+
+    return round(score, 2)

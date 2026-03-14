@@ -1,7 +1,7 @@
 from models.data_loader import load_dataset
 from models.skill_alignment import (
     generate_skill_templates,
-    extract_skills_from_text,
+    extract_skills,
     calculate_alignment
 )
 
@@ -21,7 +21,7 @@ for index, row in df.iterrows():
     if category in templates:
         required_skills = templates[category]
 
-        matched = extract_skills_from_text(resume_text, required_skills)
+        matched = extract_skills(resume_text, required_skills)
         score = calculate_alignment(matched, required_skills)
 
         alignment_results.append({
