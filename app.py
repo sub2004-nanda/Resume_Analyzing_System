@@ -180,7 +180,7 @@ def load_ai_system():
     # -----------------------------
     model, accuracy, report = train_classifier(X, y)
 
-    templates = generate_skill_templates(df)
+    templates = generate_skill_templates(df, top_n=5)
 
     return model, vectorizer, templates, accuracy
 

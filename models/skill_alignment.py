@@ -30,7 +30,7 @@ def extract_skills(text):
     return found_skills
 
 
-def generate_skill_templates(df):
+def generate_skill_templates(df,top_n):
 
     templates = {}
 

@@ -15,14 +15,19 @@ templates = generate_skill_templates(df, top_n=5)
 alignment_results = []
 
 for index, row in df.iterrows():
-    category = row["category"].upper()
+
+    category = row["category"]
     resume_text = row["resume_text"]
 
     if category in templates:
+
         required_skills = templates[category]
 
-        matched = extract_skills(resume_text, required_skills)
-        score = calculate_alignment(matched, required_skills)
+        # extract skills from resume
+        resume_skills = extract_skills(resume_text)
+
+        # calculate alignment
+        score = calculate_alignment(resume_skills, required_skills)
 
         alignment_results.append({
             "category": category,
@@ -32,5 +37,6 @@ for index, row in df.iterrows():
 alignment_df = pd.DataFrame(alignment_results)
 
 print("\nAverage Alignment (Auto Templates):\n")
-print(alignment_df.groupby("category")["alignment_score"].mean())
+print(alignment_df.head())
 
+print(alignment_df.groupby("category")["alignment_score"].mean())
