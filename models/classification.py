@@ -23,3 +23,4 @@ def train_classifier(X, y):
     report = classification_report(y_test, predictions)
 
     return model, accuracy, report
+
