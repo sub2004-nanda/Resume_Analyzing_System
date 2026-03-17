@@ -9,7 +9,7 @@ import pandas as pd
 
 df = load_dataset()
 
-# Generate automatic templates
+
 templates = generate_skill_templates(df, top_n=5)
 
 alignment_results = []
@@ -23,10 +23,10 @@ for index, row in df.iterrows():
 
         required_skills = templates[category]
 
-        # extract skills from resume
+        
         resume_skills = extract_skills(resume_text)
 
-        # calculate alignment
+       
         score = calculate_alignment(resume_skills, required_skills)
 
         alignment_results.append({

@@ -16,32 +16,21 @@ from sklearn.neighbors import KNeighborsClassifier
 def main():
     
 
-    # ========================
-    # STEP 1: Load dataset
-    # ========================
+
     df = load_dataset()
 
-    # ========================
-    # STEP 2: Clean text
-    # ========================
+  
     df["clean_text"] = df["resume_text"].apply(clean_text)
 
-    # ========================
-    # STEP 3: TF-IDF
-    # ========================
+  
     X, vectorizer = apply_tfidf(df["clean_text"])
     y = df["category"]
 
-    # ========================
-    # STEP 4: Train-test split
-    # ========================
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
 
-    # ========================
-    # STEP 5: Define models
-    # ========================
+   
     models = {
         "Linear SVM": LinearSVC(),
         "Logistic Regression": LogisticRegression(max_iter=1000),
@@ -50,9 +39,7 @@ def main():
         "KNN": KNeighborsClassifier()
     }
 
-    # ========================
-    # STEP 6: Training loop
-    # ========================
+   
     print("\nModel Comparison:\n")
 
     for name, model in models.items():
@@ -79,6 +66,6 @@ def main():
         print(f"  CV: {round(cv_mean*100,2)} %\n")
 
 
-# 🔥 THIS LINE FIXES YOUR WHOLE ISSUE
+
 if __name__ == "__main__":
     main()
