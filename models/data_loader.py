@@ -51,21 +51,23 @@ def load_dataset():
 
     df = pd.read_csv("data/Resumedataset.csv")
 
-    # Rename column to match project naming
+    
+    
     df = df.rename(columns={
         "Text": "resume_text"
     })
 
-    # Keep all three columns
+    
+    
     df = df[["category", "job_title", "resume_text"]]
 
-    # Remove empty rows
+    
     df = df.dropna()
 
-    # Remove rare categories (less than 5 samples)
+  
     df = df.groupby("category").filter(lambda x: len(x) >= 5)
 
-    # Text preprocessing
+ 
     df["clean_text"] = df["resume_text"].apply(clean_text)
 
     return df

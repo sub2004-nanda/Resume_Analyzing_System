@@ -1,6 +1,6 @@
 import re
 
-# Technical skill dictionary
+
 TECH_SKILLS = {
     "python","java","javascript","react","node","flask","django",
     "sql","mysql","postgresql","mongodb","html","css",

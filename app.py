@@ -20,9 +20,6 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
 
 
-# -----------------------------
-# STREAMLIT CONFIG
-# -----------------------------
 st.set_page_config(page_title="AI Resume Screening System", layout="wide")
 
 st.title("🤖 AI Resume Screening & Skill Gap Analyzer")
@@ -33,9 +30,7 @@ to evaluate resumes for job positions.
 """)
 
 
-# -----------------------------
-# EXPERIENCE EXTRACTOR
-# -----------------------------
+
 def extract_experience(resume_text):
 
     text = resume_text.lower()
@@ -53,9 +48,6 @@ def extract_experience(resume_text):
     return experience
 
 
-# -----------------------------
-# PDF GENERATOR
-# -----------------------------
 def create_pdf(df):
 
     buffer = io.BytesIO()
@@ -64,12 +56,11 @@ def create_pdf(df):
 
     title = Paragraph("AI Resume Screening Results", styles["Title"])
 
-    # convert dataframe rows to paragraphs for wrapping
+   
     data = [df.columns.tolist()]
     for row in df.values:
         data.append([Paragraph(str(cell), styles["Normal"]) for cell in row])
 
-    # control column widths
     col_widths = [80, 80, 60, 70, 90, 90, 90, 120, 80]
 
     table = Table(data, colWidths=col_widths, repeatRows=1)
@@ -98,9 +89,6 @@ def create_pdf(df):
     return buffer
 
 
-# -----------------------------
-# LOAD AI MODEL
-# -----------------------------
 @st.cache_resource
 def load_ai_system():
 
@@ -108,12 +96,10 @@ def load_ai_system():
 
     df["category"] = df["category"].str.upper()
 
-    # -----------------------------
-    # CATEGORY MERGING
-    # -----------------------------
+
     category_mapping = {
 
-        # IT
+        
         "PYTHON DEVELOPER": "IT",
         "JAVA DEVELOPER": "IT",
         "FRONTEND DEVELOPER": "IT",
@@ -128,56 +114,45 @@ def load_ai_system():
         "HADOOP": "IT",
         "INFORMATION-TECHNOLOGY": "IT",
 
-        # FINANCE
         "ACCOUNTANT": "FINANCE",
         "BANKING": "FINANCE",
         "FINANCE": "FINANCE",
 
-        # EDUCATION
+       
         "TEACHER": "EDUCATION",
         "ARTS": "EDUCATION",
 
-        # SALES
+       
         "SALES": "SALES",
         "BUSINESS-DEVELOPMENT": "SALES",
         "PUBLIC-RELATIONS": "SALES",
 
-        # ENGINEERING
+      
         "ENGINEERING": "ENGINEERING",
         "MECHANICAL ENGINEER": "ENGINEERING",
         "CIVIL ENGINEER": "ENGINEERING",
         "ELECTRICAL ENGINEERING": "ENGINEERING",
 
-        # HEALTHCARE
+       
         "HEALTHCARE": "HEALTHCARE",
         "FITNESS": "HEALTHCARE",
 
-        # HR
+       
         "HR": "HR"
     }
 
     df["category"] = df["category"].replace(category_mapping)
 
-    # -----------------------------
-    # REMOVE RARE CATEGORIES
-    # -----------------------------
+   
     df = df.groupby("category").filter(lambda x: len(x) >= 10)
 
-    # -----------------------------
-    # CLEAN TEXT
-    # -----------------------------
     df["cleaned_resume"] = df["resume_text"].apply(clean_text)
 
-    # -----------------------------
-    # TF-IDF
-    # -----------------------------
     X, vectorizer = apply_tfidf(df["cleaned_resume"])
 
     y = df["category"]
 
-    # -----------------------------
-    # TRAIN MODEL
-    # -----------------------------
+    
     model, accuracy, report = train_classifier(X, y)
 
     templates = generate_skill_templates(df, top_n=5)
@@ -191,9 +166,7 @@ st.sidebar.markdown("### Model Information")
 st.sidebar.write("Classification Accuracy:", round(model_accuracy * 100, 2), "%")
 
 
-# -----------------------------
-# INPUT SECTION
-# -----------------------------
+
 st.header("📄 Job Description")
 
 jd_input = st.text_area("Paste Job Description", height=200)
@@ -211,9 +184,7 @@ required_experience = st.number_input(
 )
 
 
-# -----------------------------
-# PROCESS RESUMES
-# -----------------------------
+
 if jd_input and resume_files:
 
     results = []
@@ -236,9 +207,7 @@ if jd_input and resume_files:
         prediction_confidence = (raw_confidence / (raw_confidence + 1)) * 100
 
 
-        # -----------------------------
-        # SKILL ALIGNMENT
-        # -----------------------------
+        
         if predicted_role in templates:
 
             required_skills = templates[predicted_role]
@@ -260,15 +229,10 @@ if jd_input and resume_files:
             skill_score = 0
 
 
-        # -----------------------------
-        # JD SIMILARITY
-        # -----------------------------
+        
         tfidf_score = calculate_similarity_score(jd_clean, resume_clean)
 
 
-        # -----------------------------
-        # EXPERIENCE MATCH
-        # -----------------------------
         candidate_experience = extract_experience(resume_text)
 
         if required_experience == 0:
@@ -277,9 +241,6 @@ if jd_input and resume_files:
             experience_score = min((candidate_experience / required_experience) * 100, 100)
 
 
-        # -----------------------------
-        # FINAL SCORE
-        # -----------------------------
         final_score = round(
             (0.5 * skill_score) +
             (0.25 * tfidf_score) +
@@ -323,10 +284,9 @@ if jd_input and resume_files:
 
     st.header("📊 Resume Evaluation Results")
 
-# Sort candidates by score
     df_results = df_results.sort_values(by="Final Score (%)", ascending=False)
 
-# Arrange columns in proper order
+
     df_results = df_results[[
         "Resume",
         "Predicted Role",
@@ -344,15 +304,13 @@ if jd_input and resume_files:
         "Location"
     ]]
 
-# Display table
+
     st.dataframe(
     df_results,
     use_container_width=True
 )
 
-    # -----------------------------
-    # DOWNLOAD EXCEL
-    # -----------------------------
+   
     excel_buffer = io.BytesIO()
 
     with pd.ExcelWriter(excel_buffer, engine='openpyxl') as writer:
@@ -368,9 +326,7 @@ if jd_input and resume_files:
     )
 
 
-    # -----------------------------
-    # DOWNLOAD PDF
-    # -----------------------------
+ 
     pdf_df = df_results[[
     "Resume",
     "Predicted Role",
@@ -391,7 +347,7 @@ if jd_input and resume_files:
         mime="application/pdf"
     )
 
-    # title = Paragraph("AI Resume Screening Results Report", styles['Title'])
+   
 
 elif jd_input and not resume_files:
 

@@ -9,7 +9,7 @@ def train_classifier(X, y):
         y,
         test_size=0.2,
         random_state=42,
-        stratify=y   # IMPORTANT
+        stratify=y  
     )
 
     model = LinearSVC(class_weight="balanced")
